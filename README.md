@@ -32,6 +32,14 @@ Para isso, o projeto busca:
 - Apresentar uma arquitetura de comunicação em rede utilizando ESP32 e MQTT.
 - Documentar os componentes, testes e resultados obtidos na simulação.
 
+### 1.2 Relação com os Objetivos de Desenvolvimento Sustentável (ODS)
+
+O Binova está relacionado ao **ODS 11, Cidades e Comunidades Sustentáveis**, especialmente à melhoria da gestão de resíduos em espaços urbanos.
+
+A proposta busca facilitar a identificação de lixeiras próximas da capacidade máxima, oferecendo informações que podem ajudar as equipes responsáveis a organizar a coleta e priorizar os locais que precisam de atendimento. Dessa forma, o projeto apresenta uma possibilidade de utilizar a tecnologia para contribuir com espaços públicos mais organizados e sustentáveis.
+
+Essa contribuição representa o objetivo da solução, considerando que seus impactos em um ambiente real ainda dependeriam de testes e acompanhamento.
+
 ## 2. Integrantes
 
 | Integrante | RM |
@@ -484,21 +492,7 @@ Na pasta `Diagram`, estão disponíveis os diagramas da arquitetura atual e da p
 
 A pasta `Evidencias` reúne os registros das simulações, testes e componentes utilizados.
 
-## 13. Limitações e possíveis melhorias
-
-O Binova foi desenvolvido como um protótipo acadêmico em ambiente simulado. Por esse motivo, alguns cuidados seriam necessários antes de utilizar a solução em um recipiente físico.
-
-As medições do HC-SR04 fornecem uma estimativa do preenchimento. Dependendo do formato dos resíduos, da posição do sensor e das dimensões da lixeira, os resultados podem variar.
-
-Outro ponto importante é a calibração. Os valores de 25 cm e 5 cm foram escolhidos para a simulação, mas precisariam ser ajustados para cada recipiente utilizado.
-
-Em uma aplicação real, também seria necessário considerar a proteção dos componentes contra umidade, impactos e sujeira, além da alimentação elétrica e da manutenção dos dispositivos.
-
-A proposta de comunicação com ESP32 e MQTT apresenta uma possibilidade de expansão, permitindo que diferentes lixeiras compartilhem suas informações com um sistema centralizado.
-
-Esse acompanhamento poderia ajudar as equipes responsáveis pela coleta a identificar pontos que precisam de atenção e organizar melhor suas atividades.
-
-## 14. Considerações finais
+## 13. Considerações finais
 
 O desenvolvimento do Binova permitiu aplicar conceitos de sistemas embarcados, sensores e comunicação de dados em uma situação relacionada ao cotidiano das cidades.
 
