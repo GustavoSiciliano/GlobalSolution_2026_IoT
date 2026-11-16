@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Binova | Monitoramento IoT</title>
+  <style>
+    :root { color-scheme:dark; --bg:#091719; --card:#122528; --edge:#294347; --text:#e7f2ed; --muted:#9ab3ad; --green:#50d0a3; --yellow:#f3c764; --red:#f58b80; }
+    * { box-sizing:border-box; } body { margin:0; font:16px/1.5 system-ui,Segoe UI,sans-serif; color:var(--text); background:radial-gradient(circle at 85% -20%,#153f3b,transparent 55%),var(--bg); }
+    .wrap { max-width:1050px; padding:40px 24px 70px; margin:0 auto; }
+    header { display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-bottom:30px; }
+    .brand { display:flex; align-items:center; gap:14px; } .logo { font-weight:800; background:#225a4d; border:1px solid #428c77; width:52px; height:52px; display:grid; place-items:center; border-radius:16px; font-size:24px; }
+    h1 { font-size:30px; margin:0; letter-spacing:-1px; } .subtitle { color:var(--muted); font-size:13px; }
+    .pill { padding:9px 14px; background:#183035; border:1px solid var(--edge); border-radius:40px; font-size:13px; color:var(--muted); }
+    .pill.active { color:var(--green); border-color:#326b5d; }
+    .lead { color:var(--muted); margin:-7px 0 24px; }
+    .grid { display:grid; grid-template-columns:1.2fr 1fr; gap:18px; }
+    .card { border:1px solid var(--edge); background:linear-gradient(140deg,rgba(29,53,55,.95),rgba(16,33,36,.95)); border-radius:22px; padding:25px; box-shadow:0 10px 35px #0003; }
+    h2 { margin:0 0 18px; font-size:15px; color:var(--muted); font-weight:600; }
+    .percent { font-size:82px; font-weight:800; line-height:1; letter-spacing:-4px; margin:22px 0 20px; }
+    .percent small { font-size:28px; letter-spacing:0; color:var(--muted); }
+    .track { height:18px; border-radius:15px; background:#314449; overflow:hidden; margin-bottom:18px; }
+    #bar { height:100%; width:0; border-radius:inherit; background:var(--green); transition:width .5s,background .5s; }
+    .status { display:inline-flex; align-items:center; padding:8px 14px; border-radius:10px; font-weight:700; letter-spacing:.3px; background:#234d43; color:var(--green); }
+    .meta { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:25px 0 0; }
+    .metric { padding:16px; background:#0a2023; border:1px solid var(--edge); border-radius:14px; }
+    .metric strong { font-size:22px; display:block; font-variant-numeric:tabular-nums; } .metric span { color:var(--muted); font-size:12px; }
+    .detail { margin:0; } .detail dt { color:var(--muted); font-size:12px; margin-top:17px; }
+    .detail dd { margin:4px 0 0; font-weight:600; overflow-wrap:anywhere; }
+    .notice { background:#0b2224; border-left:3px solid var(--green); padding:13px 16px; margin-top:21px; color:var(--muted); font-size:13px; border-radius:0 8px 8px 0; }
+    .tablecard { margin-top:18px; } table { width:100%; border-collapse:collapse; } th { color:var(--muted); font-weight:500; font-size:12px; text-align:left; padding:10px 8px; }
+    td { padding:12px 8px; border-top:1px solid var(--edge); font-size:13px; } .tablewrap { overflow-x:auto; }
+    .tag { font-size:12px; border-radius:6px; padding:4px 8px; background:#273d3e; white-space:nowrap; }
+    .footer { display:flex; justify-content:space-between; gap:12px; color:var(--muted); font-size:12px; padding-top:16px; flex-wrap:wrap; }
+    a { color:var(--green); } @media(max-width:760px){ .wrap{padding:22px 15px} .grid{grid-template-columns:1fr} .percent{font-size:62px} .card{padding:20px} }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div class="brand"><div class="logo">♻</div><div><h1>Binova</h1><div class="subtitle">FIAP · Global Solution 2026/2 · IoT / CitizenTech</div></div></div>
+      <div id="ligacao" class="pill">Aguardando leituras…</div>
+    </header>
+    <p class="lead">Monitoramento de preenchimento de lixeiras com Arduino Uno simulado no Wokwi e recepção HTTP via FastAPI.</p>
+    <div class="grid">
+      <section class="card">
+        <h2>Preenchimento atual</h2>
+        <div class="percent"><span id="percent">--</span><small>%</small></div>
+        <div class="track"><div id="bar"></div></div>
+        <div id="situacao" class="status">AGUARDANDO DADOS</div>
+        <div class="meta">
+          <div class="metric"><strong id="distancia">--</strong><span>Distância do sensor</span></div>
+          <div class="metric"><strong id="registros">0</strong><span>Leituras listadas</span></div>
+        </div>
+      </section>
+      <section class="card">
+        <h2>Detalhes da comunicação</h2>
+        <dl class="detail">
+          <dt>Origem da mensagem</dt><dd id="origem">Nenhuma leitura recebida</dd>
+          <dt>Modo do Arduino</dt><dd id="modo">—</dd>
+          <dt>Último recebimento</dt><dd id="horario">—</dd>
+          <dt>Transporte</dt><dd>Arduino → Serial RFC2217 → Python → HTTP POST → FastAPI</dd>
+        </dl>
+        <div class="notice" id="aviso">Para integrar de verdade, inicie o Wokwi no VS Code e execute ponte_serial.py. Leituras de teste HTTP são marcadas separadamente.</div>
+      </section>
+    </div>
+    <section class="card tablecard">
+      <h2>Histórico recente</h2>
+      <div class="tablewrap">
+        <table><thead><tr><th>Hora</th><th>Origem</th><th>Modo</th><th>Distância</th><th>Nível</th><th>Situação</th></tr></thead><tbody id="historico"><tr><td colspan="6">Aguardando dados…</td></tr></tbody></table>
+      </div>
+      <div class="footer"><span>Atualização automática a cada 2 segundos</span><span><a href="/docs" target="_blank" rel="noopener">Swagger /docs</a> · <a href="/api/leituras" target="_blank" rel="noopener">JSON da API</a></span></div>
+    </section>
+  </main>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const statusCor = { DISPONIVEL: '#50d0a3', ATENCAO:'#f3c764', PROXIMO_DO_LIMITE:'#f58b80', CHEIO:'#f58b80', SEM_DADOS:'#9ab3ad' };
+    const statusTexto = { DISPONIVEL:'DISPONÍVEL', ATENCAO:'ATENÇÃO', PROXIMO_DO_LIMITE:'PRÓXIMO DO LIMITE', CHEIO:'CHEIO', SEM_DADOS:'SEM DADOS' };
+    function hora(iso) { try { return new Date(iso).toLocaleTimeString('pt-BR'); } catch { return '—'; } }
+    function origem(v) { return v === 'wokwi_serial' ? 'Wokwi via serial (ponte Python)' : 'Teste HTTP — não é leitura do Wokwi'; }
+    function modo(v) { return v === 'manual' ? 'MANUAL (percentual escolhido)' : 'SENSOR (HC-SR04 virtual)'; }
+    function cel(tr, valor) { let td = document.createElement('td'); td.textContent = valor; tr.appendChild(td); }
+    async function atualizar() {
+      try {
+        const res = await fetch('/api/leituras?limite=12', {cache:'no-store'});
+        if (!res.ok) throw new Error('HTTP '+res.status);
+        const itens = await res.json();
+        $('registros').textContent = String(itens.length);
+        if (itens.length === 0) { $('ligacao').textContent='Aguardando leituras…'; return; }
+        const atual = itens[0];
+        const idadeSeg = (Date.now()-new Date(atual.recebidoEm).getTime())/1000;
+        const ativo = atual.origem === 'wokwi_serial' && idadeSeg <= 10;
+        $('ligacao').textContent = ativo ? '● Dados Wokwi chegando' : (idadeSeg > 10 ? '● Sem novas leituras' : '● Teste HTTP recebido');
+        $('ligacao').classList.toggle('active', ativo);
+        $('percent').textContent = atual.valida ? atual.nivelPercentual : '--';
+        $('bar').style.width = (atual.valida ? atual.nivelPercentual : 0)+'%';
+        $('bar').style.background = statusCor[atual.situacao] || '#9ab3ad';
+        $('situacao').textContent = statusTexto[atual.situacao] || 'SEM DADOS';
+        $('situacao').style.color = statusCor[atual.situacao] || '#9ab3ad';
+        $('distancia').textContent = atual.distanciaCm == null ? '—' : atual.distanciaCm.toFixed(1)+' cm';
+        $('origem').textContent = origem(atual.origem);
+        $('modo').textContent = modo(atual.modo);
+        $('horario').textContent = hora(atual.recebidoEm);
+        $('aviso').textContent = atual.origem === 'wokwi_serial'
+          ? 'Esses dados foram transmitidos pela porta serial do Wokwi VS Code e recebidos por HTTP nesta API local.'
+          : 'Esta é uma simulação de requisição HTTP. Para provar o caminho do sensor, rode o Wokwi VS Code e a ponte serial.';
+        const corpo = $('historico'); corpo.replaceChildren();
+        for (const dado of itens) {
+          const tr = document.createElement('tr');
+          [hora(dado.recebidoEm), dado.origem==='wokwi_serial'?'Wokwi':'Teste HTTP', dado.modo,
+           dado.distanciaCm == null?'—':dado.distanciaCm.toFixed(1)+' cm',
+           dado.nivelPercentual == null?'—':dado.nivelPercentual+'%',
+           statusTexto[dado.situacao] || '—'].forEach(v=>cel(tr,v));
+          corpo.appendChild(tr);
+        }
+      } catch (e) { $('ligacao').textContent='API indisponível'; $('ligacao').classList.remove('active'); }
+    }
+    atualizar(); setInterval(atualizar,2000);
+  </script>
+</body>
+</html>

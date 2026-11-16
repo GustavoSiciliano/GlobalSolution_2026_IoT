@@ -1,21 +1,20 @@
-# Proposta de arquitetura e comunicação — Binova
+# Arquitetura de comunicação — Binova
 
-**Este é um diagrama de arquitetura proposto, não uma evidência de conexão de rede implementada.**
+O circuito Arduino Uno é simulado no Wokwi. Para demonstrar a conectividade com uma aplicação, foi adicionada uma ponte local **Serial RFC2217 → Python → HTTP POST → FastAPI**.
 
 ```mermaid
-flowchart TD
-    S[HC-SR04 virtual no Wokwi] -->|Distância / eco| A[Arduino Uno]
-    A -->|I2C| L[LCD 16x2]
-    A -->|Sinais digitais| I[LEDs e buzzer]
-    A -->|JSON pela UART simulada| M[Monitor Serial do Wokwi]
-    M -.->|Proposta futura: gateway de rede| G[Computador ou módulo com conectividade]
-    G -.->|Proposta futura: HTTP / rede IP| P[Painel do gestor / sistema Binova]
+flowchart LR
+    S[HC-SR04 - Wokwi] --> A[Arduino Uno]
+    A --> L[LCD I2C / LEDs / buzzer]
+    A -->|JSON serial 9600 baud| W[Wokwi VS Code - RFC2217:4000]
+    W --> P[ponte_serial.py - computador]
+    P -->|HTTP POST /api/leituras| API[FastAPI - localhost:8000]
+    API --> WEB[Painel web de monitoramento]
+    API -.-> FUT[Integração futura Java/.NET ou nuvem]
 ```
 
-## Situação real x proposta
+**Implementado em código:** saída serial do Arduino, ponte Python, validação e histórico HTTP em FastAPI, painel web.  
+**Ainda precisa ser comprovado:** execução da comunicação ponta a ponta no computador do grupo, com Wokwi VS Code aberto, ponte ativa e leituras recebidas.  
+**Não implementado:** conectividade Wi-Fi no Arduino Uno, integração automática com APIs Java/.NET e envio para serviço de nuvem.
 
-- **Implementado no Wokwi:** simulação do HC-SR04, processamento no Arduino, LCD, LEDs, buzzer e impressão de JSON no Monitor Serial.
-- **Proposto para evolução:** transmissão pela rede, mediante dispositivo ou módulo com conectividade, para apresentação dos dados a um gestor.
-- **Não implementado nesta entrega:** FastAPI, integração Java, Wi-Fi no Arduino Uno, gateway e comunicação HTTP real.
-
-A disciplina solicita a identificação de dispositivos, meios de comunicação e caminho dos dados. A infraestrutura proposta pode ser explicada sem afirmar que houve uma integração de rede funcional.
+O Wokwi no navegador serve para testar o circuito, mas a porta RFC2217 desta implementação é fornecida pela extensão de VS Code. O computador é o componente que possui acesso à rede e envia HTTP.

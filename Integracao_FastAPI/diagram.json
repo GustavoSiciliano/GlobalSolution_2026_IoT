@@ -1,0 +1,301 @@
+
+{
+  "version": 1,
+  "author": "GustavoSiciliano",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-arduino-uno",
+      "id": "uno",
+      "top": 115.8,
+      "left": -317.4,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-hc-sr04",
+      "id": "sensor",
+      "top": -36.9,
+      "left": 619.9,
+      "attrs": {
+        "distance": "15"
+      }
+    },
+    {
+      "type": "wokwi-lcd1602",
+      "id": "lcd",
+      "top": 188.8,
+      "left": 207.2,
+      "attrs": {
+        "pins": "i2c",
+        "i2cAddress": "0x27"
+      }
+    },
+    {
+      "type": "wokwi-breadboard-half",
+      "id": "bb1",
+      "top": 553.8,
+      "left": 473.2,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-led",
+      "id": "verde",
+      "top": 562.8,
+      "left": 531.8,
+      "attrs": {
+        "color": "green"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "amarelo",
+      "top": 562.8,
+      "left": 627.8,
+      "attrs": {
+        "color": "yellow"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "vermelho",
+      "top": 562.8,
+      "left": 723.8,
+      "attrs": {
+        "color": "red"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rv",
+      "top": 638.4,
+      "left": 517.85,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "ra",
+      "top": 638.4,
+      "left": 613.85,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rr",
+      "top": 638.4,
+      "left": 709.85,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    },
+    {
+      "type": "wokwi-buzzer",
+      "id": "buzzer",
+      "top": 310,
+      "left": 900,
+      "attrs": {
+        "volume": "0.15"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "uno:8",
+      "sensor:TRIG",
+      "green",
+      ["v-105", "h220", "*", "v35"]
+    ],
+    [
+      "uno:2",
+      "sensor:ECHO",
+      "blue",
+      ["v-80", "h255", "*", "v50"]
+    ],
+    [
+      "uno:5V",
+      "bb1:tp.1",
+      "red",
+      ["v95", "h155", "v80", "*", "v-15"]
+    ],
+    [
+      "uno:GND.2",
+      "bb1:tn.1",
+      "black",
+      ["v115", "h175", "v90", "*", "v-10"]
+    ],
+    [
+      "bb1:tn.2",
+      "bb1:bn.2",
+      "black",
+      ["h-40", "v175", "*", "h-40"]
+    ],
+    [
+      "sensor:VCC",
+      "bb1:tp.5",
+      "red",
+      ["v25", "h-115", "v305", "*", "v-20"]
+    ],
+    [
+      "sensor:GND",
+      "bb1:tn.5",
+      "black",
+      ["v45", "h-145", "v310", "*", "v-15"]
+    ],
+    [
+      "uno:A4",
+      "lcd:SDA",
+      "green",
+      ["v35", "h220", "*", "h-25"]
+    ],
+    [
+      "uno:A5",
+      "lcd:SCL",
+      "blue",
+      ["v55", "h240", "*", "h-35"]
+    ],
+    [
+      "lcd:VCC",
+      "bb1:tp.12",
+      "red",
+      ["h-45", "v95", "*", "v-20"]
+    ],
+    [
+      "lcd:GND",
+      "bb1:tn.12",
+      "black",
+      ["h-65", "v110", "*", "v-15"]
+    ],
+    [
+      "uno:A0",
+      "bb1:7t.c",
+      "green",
+      ["v80", "h160", "*", "v-25"]
+    ],
+    [
+      "bb1:6b.h",
+      "bb1:bn.6",
+      "black",
+      ["v25"]
+    ],
+    [
+      "uno:A1",
+      "bb1:17t.c",
+      "gold",
+      ["v100", "h190", "*", "v-20"]
+    ],
+    [
+      "bb1:16b.h",
+      "bb1:bn.16",
+      "black",
+      ["v25"]
+    ],
+    [
+      "uno:A2",
+      "bb1:27t.c",
+      "red",
+      ["v120", "h220", "*", "v-15"]
+    ],
+    [
+      "bb1:26b.h",
+      "bb1:bn.26",
+      "black",
+      ["v25"]
+    ],
+    [
+      "uno:A3",
+      "buzzer:2",
+      "violet",
+      ["v145", "h575", "*", "v70"]
+    ],
+    [
+      "buzzer:1",
+      "bb1:tn.29",
+      "black",
+      ["h55", "v120", "*", "v-10"]
+    ],
+    [
+      "verde:A",
+      "bb1:7t.a",
+      "",
+      ["$bb"]
+    ],
+    [
+      "verde:C",
+      "bb1:6t.a",
+      "",
+      ["$bb"]
+    ],
+    [
+      "amarelo:A",
+      "bb1:17t.a",
+      "",
+      ["$bb"]
+    ],
+    [
+      "amarelo:C",
+      "bb1:16t.a",
+      "",
+      ["$bb"]
+    ],
+    [
+      "vermelho:A",
+      "bb1:27t.a",
+      "",
+      ["$bb"]
+    ],
+    [
+      "vermelho:C",
+      "bb1:26t.a",
+      "",
+      ["$bb"]
+    ],
+    [
+      "rv:1",
+      "bb1:6t.b",
+      "",
+      ["$bb"]
+    ],
+    [
+      "rv:2",
+      "bb1:6b.f",
+      "",
+      ["$bb"]
+    ],
+    [
+      "ra:1",
+      "bb1:16t.b",
+      "",
+      ["$bb"]
+    ],
+    [
+      "ra:2",
+      "bb1:16b.f",
+      "",
+      ["$bb"]
+    ],
+    [
+      "rr:1",
+      "bb1:26t.b",
+      "",
+      ["$bb"]
+    ],
+    [
+      "rr:2",
+      "bb1:26b.f",
+      "",
+      ["$bb"]
+    ]
+  ],
+  "serialMonitor": {
+    "collapse": false,
+    "display": "always",
+    "newline": "lf"
+  },
+  "dependencies": {}
+}
